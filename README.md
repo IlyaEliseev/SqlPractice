@@ -1,1 +1,1 @@
-# SqlPractice
+Sql server practice
