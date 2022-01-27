@@ -188,14 +188,39 @@ GROUP BY s.Id, s.Name
 ORDER BY s.Id
 
 SELECT 
+    l.Id,
+    l.Title,
+    l.StartDate,
+    t.Title,
+    t.TimecodeTime
+FROM Lessons l
+INNER JOIN LessonsTimecodes lt ON lt.LessonId = l.Id
+INNER JOIN Timecode t ON lt.TimecodeId = t.Id
+ORDER BY l.Id
+
+SELECT 
+    l.Id,
+    l.Title, 
+    COUNT(l.Title) AS 'Timecode count',
+    l.StartDate
+FROM Lessons l
+INNER JOIN LessonsTimecodes lt ON lt.LessonId = l.Id
+INNER JOIN Timecode t ON lt.TimecodeId = t.Id
+GROUP BY l.Id, l.Title, l.StartDate
+ORDER BY l.Id
+
+SELECT 
     s.Id, 
-    s.Name, COUNT(s.Name) AS '111' 
+    s.Name, 
+    l.Title,
+    COUNT(l.Id) AS 'Question count',
+    COUNT(s.Id) AS 'Visite lessons count'
     FROM StudentsQuestions sq
-INNER JOIN VisitedLessons vl ON vl.Id = sq.VisitedLessonId
-INNER JOIN Question q ON sq.QuestionId = q.Id
-INNER JOIN Lessons l ON l.Id = vl.LessonId
-INNER JOIN Students s ON s.Id = vl.StudentsId
-GROUP BY s.Id, s.Name
+LEFT JOIN VisitedLessons vl ON vl.Id = sq.VisitedLessonId
+LEFT JOIN Question q ON sq.QuestionId = q.Id
+LEFT JOIN Lessons l ON l.Id = vl.LessonId
+RIGHT JOIN Students s ON s.Id = vl.StudentsId
+GROUP BY s.Id, s.Name, l.Title, l.Id
 ORDER BY s.Id
 
 
